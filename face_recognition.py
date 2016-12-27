@@ -14,7 +14,7 @@ def feedforward(w,a,x):
 
 def backprop(w,z,delta_next):
 	f = lambda s: np.array(1/(1+np.exp(-s)))
-	df = lambda s: f(s) * (1 - f(S))
+	df = lambda s: f(s) * (1 - f(s))
 	delta = df(z) * np.dot(w.T,delta_next)
 
 	return delta
@@ -25,7 +25,7 @@ unlabeledData = DataSet['unlabeled_data']
 dataset_size = 80
 unlabeled_data = np.zeros(unlabeledData.shape)
 
-for i in range(dataset_set):
+for i in range(dataset_size):
 	tmp = unlabeledData[:,i]/255.
 	unlabeled_data[:,i] = (tmp - np.mean(tmp)) / np.std(tmp)
 
@@ -48,10 +48,10 @@ w = []
 for l in range(layer_num-1):
 	w.append(np.random.randn(layer_struc[l+1][1],sum(layer_struc[l])))
 
-x = []
-x.append(np.array(unlabeled_data[:,:]))
-x.append(np.zeros((0,dataset_size)))
-x.append(np.zeros((0,dataset_size)))
+X = []
+X.append(np.array(unlabeled_data[:,:]))
+X.append(np.zeros((0,dataset_size)))
+X.append(np.zeros((0,dataset_size)))
 
 delta = []
 for l in range(layer_num):
@@ -72,9 +72,8 @@ for iImg in range(nColumn):
 count = 0
 print('Training start ...')
 for ite in range(max_epoch):
-	ind = list(range(dataset_size)
+	ind = list(range(dataset_size))
 	random.shuffle(ind)
-
 	a = []
 	z = []
 	z.append([])
@@ -102,7 +101,7 @@ for ite in range(max_epoch):
 
 	if np.mod(ite+1,100) == 0:
 		b=[]
-		b.append(np.zeros((layer_struc[0][1],datset_size)))
+		b.append(np.zeros((layer_struc[0][1],dataset_size)))
 
 		for l in range(layer_num-1):
 			tempA, tempZ = feedforward(w[l],b[l],X[l])
